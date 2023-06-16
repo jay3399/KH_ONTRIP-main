@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="selectDAreaName">
+		SELECT DAREA_NAME
+	   	FROM "Detailed Area"
+  		WHERE "DAREA_CODE" = ?
+	</entry>
+	
+	<entry key="selectFilePath">
+		SELECT FILE_PATH, ORIGIN_NAME
+		FROM "Image"
+        JOIN "Detailed Area" USING(DAREA_CODE)
+		WHERE "DAREA_CODE" = ?
+        AND FILE_PATH = 'resources/detailedArea_Img/'
+	</entry>
+	
+	<entry key="selectPlayPath">
+		SELECT FILE_NO, FILE_PATH, CHANGE_NAME
+		FROM "Image" 
+		WHERE STATUS = 'Y' AND DAREA_CODE = ? AND CATEGORY_CODE='PP' AND ORIGIN_NAME LIKE '%1%'
+		ORDER BY PLC_CODE
+	</entry>
+	
+	<entry key="selectHotelPath">
+		SELECT FILE_NO, FILE_PATH, CHANGE_NAME
+		FROM "Image" 
+		WHERE STATUS = 'Y' AND DAREA_CODE = ? AND CATEGORY_CODE='HH' AND ORIGIN_NAME LIKE '%1%'
+		ORDER BY PLC_CODE
+	</entry>
+	
+	<entry key="selectFoodPath">
+		SELECT FILE_NO, FILE_PATH, CHANGE_NAME
+		FROM "Image" 
+		WHERE STATUS = 'Y' AND DAREA_CODE = ? AND CATEGORY_CODE='FF' AND ORIGIN_NAME LIKE '%1%'
+		ORDER BY PLC_CODE
+	</entry>
+</properties>

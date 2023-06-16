@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+<!--    문의사항 & 페이징처리 쿼리 -->
+
+    <entry key="insertQuestion">
+     INSERT INTO "Questions"(Q_CODE , MEM_NO , Q_TITLE , Q_CONTENT , A_CONTENT)values(SEQ_Q.NEXTVAL,?,?,?,?)
+    </entry>
+
+    <entry key="questionByCode">
+     select * from "Questions" where Q_CODE = ?
+    </entry>
+
+    <entry key="questionPaging">
+        select * from (select rownum rn , a.* from(select * from "Questions" order by q_code desc ) A ) where rn between ? and ?
+    </entry>
+
+    <entry key="getTotal">
+
+        select count(*) as total from "Questions"
+
+    </entry>
+
+    <entry key="insertAnswer">
+
+        update "Questions" set a_content = ? where q_code =?
+
+    </entry>
+    <!--    문의사항 & 페이징처리 쿼리 -->
+
+
+
+
+
+    <!--    QNA -->
+
+    <entry key="saveQna">
+
+        insert into "QnA"(QA_CODE , QA_QUESTION , QA_ANSWER , QA_CATEGORY) values( SEQ_QA.NEXTVAL, ? , ? , ? )
+
+    </entry>
+
+    <entry key="selectByCategory">
+        select * from "QnA" where QA_CATEGORY = ?
+    </entry>
+
+
+
+    <entry key="deleteQna">
+
+
+        delete from "QnA" where QA_CODE = ?
+
+
+    </entry>
+
+
+    <!--    QNA -->
+
+
+
+    <!--   등록후기 & 페이징처리  -->
+    <entry key="ReviewPaging">
+<!--        select * from (select rownum rn , a.* from(select * from "Review" order by q_code desc where rev_category = ?) A ) where rn between ? and ?-->
+<!--        select * from ( select rownum rn , a.* from(select r.rev_code  ,p.plc_name ,p.category_code , m.mem_name ,r.rev_date from "Review" r-->
+<!--        inner join "Place" p on r.plc_code = p.plc_code inner join "Member" m on r.mem_no = m.mem_no order by rev_code desc where p.category_code = ?) A ) where rn between ? and ?-->
+
+        select * from (select rownum rn, a.* from (select r.rev_code, p.plc_name, p.category_code, m.mem_name, r.rev_date from "Review" r
+        inner join "Place" p on r.plc_code = p.plc_code
+        inner join "Member" m on r.mem_no = m.mem_no
+        where p.category_code = ?
+        order by r.rev_code desc) A)
+        where rn between ? and ?
+    </entry>
+
+
+    <entry key="getReviewTotal">
+
+<!--        select count(*) as total from "Review"-->
+
+
+        select count(*) as total from "Review" r inner join "Place" p on r.plc_code = p.plc_code where category_code = ?
+
+    </entry>
+
+
+
+    <entry key="reviewDetailed">
+
+        select p.plc_name, m.mem_name, r.rev_date , r.rev_text , s.rev_star , s.rev_c , s.rev_s , s.rev_p, p.category_code from "Review" r
+        inner join "Place" p on r.plc_code = p.plc_code
+        inner join "Member" m on r.mem_no = m.mem_no
+        inner join "Score" s on r.REV_CODE = s.REV_CODE
+        where r.REV_CODE = ?
+
+    </entry>
+
+
+    <entry key="deleteReview">
+        delete from "Review" where REV_CODE = ?
+
+    </entry>
+
+
+    <!--   등록후기 & 페이징처리  -->
+
+
+
+
+
+
+
+
+
+    <!--    예약페이지-->
+
+
+
+    <entry key="saveRev">
+
+        insert into "Reservation"(RN_CODE , PLC_CODE , MEM_NO , RN_NAME , RN_ADULT , RN_CHILD , RN_COUNT , ROOM_TYPE , RN_PHONE , RN_CIN , RN_COUT , RN_PRICE)
+        values(SEQ_RN.nextval , ?,?,?,?,?,?,?,?,?,?,?)
+
+
+    </entry>
+
+
+    <entry key="getPlaceName">
+
+        select * from "Place" where PlC_CODE = ?
+
+    </entry>
+
+
+
+
+    <!--    예약페이지-->
+
+
+
+
+
+
+
+
+
+    <!--    멤버 문의사항 & 페이징처리 쿼리 -->
+
+
+   <entry key="memberQueList">
+
+       select * from (select rownum rn, a.* from (select q.Q_CODE , q.Q_TITLE , q.Q_DATE ,q.A_CONTENT ,  m.MEM_NAME , m.MEM_NO  from "Questions" q inner join "Member" m on m.MEM_NO = q.MEM_NO
+       order by q.Q_CODE desc) A)
+       where rn between ? and ?
+
+   </entry>
+
+    <entry key="updateQuestion">
+
+        update "Questions" set q_title = ? ,q_content = ?  where Q_CODE = ?
+
+    </entry>
+
+
+
+    <entry key="deleteQuestion">
+
+
+        delete from "Questions" where Q_CODE = ?
+
+
+    </entry>
+
+
+    <!--    멤버문의사항 & 페이징처리 쿼리 -->
+
+
+
+
+
+
+
+<!--    마이페이지 예약숙소 -->
+
+
+
+
+
+
+    <entry key="reservationByCode">
+        select * from "Reservation" r inner join "Place" p on r.PLC_CODE = p.PLC_CODE inner join "Member" m on m.MEM_NO = r.MEM_NO where RN_CODE = ?
+    </entry>
+
+
+
+    <entry key="reservationPaging">
+        select * from (select rownum rn , a.* from(select * from "Reservation" r inner join "Member" m on r.MEM_NO = m.MEM_NO inner join "Place" p on r.PLC_CODE = p.PLC_CODE where m.MEM_NO = ? order by rn_code desc ) A ) where rn between ? and ?
+    </entry>
+
+
+
+    <entry key="revGetTotal">
+
+    select count(*) as total from "Reservation" r inner join "Member" m on r.MEM_NO = m.MEM_NO where m.MEM_NO = ?
+
+
+    </entry>
+
+
+
+    <entry key="getHotelsImage">
+
+
+        SELECT FILE_NO, FILE_PATH, CHANGE_NAME
+        FROM "Image"
+        WHERE STATUS = 'Y' AND PLC_CODE = ? AND CATEGORY_CODE='HH' AND ORIGIN_NAME LIKE '%1%'
+        ORDER BY CHANGE_NAME
+
+    </entry>
+
+
+
+
+
+    <!--    마이페이지 예약숙소 -->
+
+	<entry key="deleteReservation">
+		
+		DELETE FROM "Reservation"
+		WHERE RN_CODE = ?
+	
+	</entry>
+
+
+
+</properties>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	
+	<entry key="loginMember">
+		SELECT * 
+		FROM "Member"
+		WHERE MEM_ID = ?
+	      AND MEM_PWD = ?
+	      AND STATUS = 'Y'
+	</entry>
+	
+	<entry key="insertMember">
+      INSERT INTO "Member"(MEM_NO,
+                     MEM_ID,
+                     MEM_PWD,
+                     MEM_NAME,
+                     MEM_GENDER,
+                     MEM_PHONE,
+                     MEM_BIRTH)
+               VALUES(SEQ_MEM.NEXTVAL,
+                     ?,
+                     ?,
+                     ?,
+                     ?,
+                     ?,
+                     ?)      
+   </entry>
+   
+   <entry key="idCheck">
+   	SELECT COUNT(*)
+   	FROM "Member"
+   	WHERE MEM_ID = ?
+   </entry>
+   
+   <entry key="findId">
+   SELECT MEM_ID
+   FROM "Member"
+   WHERE MEM_NAME = ? AND MEM_PHONE= ?
+   </entry>
+
+   <!--    관리자 멤버관리-->
+    <entry key="memberList">
+        SELECT *
+        FROM "Member"
+    </entry>
+
+    <entry key="memberByNo">
+
+        select * from "Member" where MEM_NO = ?
+    </entry>
+    <!--    관리자 멤버관리-->
+
+
+    <entry key="findPwd">
+	   SELECT RPAD(SUBSTR(MEM_PWD,1,4),length(MEM_PWD),'*') as MEM_PWD
+	   FROM "Member"
+	   WHERE MEM_NAME = ? AND MEM_ID = ? AND MEM_PHONE = ? 
+   </entry>
+   
+   <entry key="findMem">
+   		SELECT MEM_ID, MEM_PWD 
+   		FROM "Member"
+   		WHERE MEM_ID = ? AND MEM_NAME = ? AND MEM_PHONE = ?
+   </entry>
+   
+   <entry key="placePaging">
+   SELECT *
+	FROM (
+		SELECT ROWNUM RNUM, A.*
+		FROM (
+			SELECT PLC_CODE, PLC_NAME, PLC_DATE, CATEGORY_CODE
+			FROM "Place"
+			WHERE CATEGORY_CODE = ? AND STATUS = 'Y'
+			ORDER BY PLC_DATE DESC
+			) A
+		)
+	WHERE RNUM BETWEEN ? AND ?
+   </entry>
+   
+   
+   <entry key="getPlaceListTotal">
+    SELECT COUNT(*) as total FROM "Place"
+   </entry>
+   
+   <entry key="detailPlace">
+    SELECT c.CATEGORY_NAME, p.PLC_NAME, l.LOCAL_NAME, d.DAREA_NAME, p.PLC_BNAME, p.PLC_ADDRESS, p.PLC_PNUMBER, p.PLC_LA, p.PLC_LO, p.PLC_TEXT, CATEGORY_CODE
+   FROM "Place" p
+   JOIN "Category" c USING(CATEGORY_CODE)
+   JOIN "Location" l USING(LOCAL_CODE)
+   JOIN "Detailed Area" d USING(DAREA_CODE) 
+   WHERE PLC_NAME = ?
+   </entry>
+   
+   
+   <entry key="detailPlaceImage">
+   SELECT FILE_NO, FILE_PATH, CHANGE_NAME
+   FROM "Image"
+   WHERE PLC_CODE = (SELECT PLC_CODE
+                     FROM "Place"
+                     WHERE PLC_NAME = ?)
+   ORDER BY CHANGE_NAME
+   </entry>
+	
+	<entry key="detailHash">
+	SELECT h.HAS_NAME, HAS_NO
+	FROM "Hash" h
+	JOIN "HashStorage" s USING(HAS_NO)
+	WHERE s.PLC_CODE =(SELECT PLC_CODE
+	                  FROM "Place"
+	                 WHERE PLC_NAME = ?)
+	</entry>
+
+   
+   
+   <entry key="deletePlace">
+   UPDATE "Place"
+   SET STATUS = 'N'
+   WHERE PLC_NAME = ?
+   </entry>
+   
+   <entry key="deletePlaceImg">
+   UPDATE "Image"
+   SET STATUS = 'N'
+   WHERE PLC_CODE IN (SELECT PLC_CODE
+   					 FROM "Place"
+   					 WHERE PLC_NAME= ? )
+   </entry>
+
+
+    <entry key="deleteMember">
+        UPDATE "Member"
+        SET STATUS = 'N' ,
+        MEM_MODIFYDATE = SYSDATE
+        WHERE MEM_ID = ?
+        AND MEM_PWD = ?
+    </entry>
+
+    <entry key="updateMember">
+        UPDATE "Member"
+        SET MEM_NAME = ? ,
+        MEM_PHONE = ? ,
+        MEM_MODIFYDATE = SYSDATE
+        WHERE STATUS = 'Y'
+        AND MEM_ID = ?
+
+    </entry>
+
+    <entry key="selectMember">
+        SELECT *
+        FROM "Member"
+        WHERE MEM_ID = ?
+        AND STATUS = 'Y'
+    </entry>
+
+    <entry key="updateMyPwd">
+        UPDATE "Member"
+        SET MEM_PWD = ? ,
+        MEM_MODIFYDATE = SYSDATE
+        WHERE MEM_ID = ? AND MEM_PWD = ?
+    </entry>
+    
+    <entry key="deleteHashStorage">
+    DELETE FROM "HashStorage"
+	WHERE PLC_CODE = (SELECT PLC_CODE
+	                  FROM "Place"
+	                  WHERE PLC_NAME = ?)
+    </entry>
+    
+    <entry key="deleteHash">
+    DELETE FROM "Hash"
+	WHERE HAS_NO IN (@)
+    </entry>
+   
+	<entry key="findPwdupdate">
+   		UPDATE "Member"
+   		SET MEM_PWD = ?
+   		WHERE MEM_ID = ?
+   </entry>
+	
+</properties>

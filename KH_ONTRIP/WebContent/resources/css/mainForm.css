@@ -1,0 +1,109 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+html,
+body {
+    font-family: 'Noto Sans KR', sans-serif !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: manipulation;
+    margin:0;
+}
+div{
+    box-sizing: border-box;
+}
+nav{
+    position:fixed;
+}
+h1{
+    text-align: center;
+    font-weight:900;
+}
+.imgbox {
+    display: block;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    border:none;
+}
+.imgbox .box-cover {
+    line-height: 1em;
+    font-size: 0;
+}
+.imgbox img {
+    backface-visibility: hidden;
+    transition: all 200ms ease-in-out;
+    -moz-transition: all 200ms ease-in-out;
+    -ms-transition: all 200ms ease-in-out;
+    -o-transition: all 200ms ease-in-out;
+    transform: scale(1);
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+}
+
+.imgbox .box-details {
+    pointer-events: none;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 30px;
+}
+
+.imgbox:hover img {
+    transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+}
+.nav_b{
+    font-size: 30px;
+    padding-left: 40px;
+    color:rgb(155, 205, 138);
+}
+.nav_h{
+    font-size:small;
+}
+.nav_brand{
+    margin-left: 50px;
+}
+.center-hash{
+    text-align: center;
+    color:rgb(24, 207, 155);
+    font-weight: 900;
+}
+.row {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+.slide-in {
+  animation: change 1s ease forwards;
+}
+
+@keyframes change {
+  from {
+    transform: translateX(50%);
+  }
+
+  to {
+    transform: translateX(0%);
+  }
+}
+
+
+@media only screen and (min-width: 1200px){
+    html {
+        font-size: 15px;
+    }
+}
+@media only screen and (min-width: 992px){
+    html {
+        font-size: 14.5px;
+    }
+}
+@media only screen and (min-width: 0){
+    html {
+        font-size: 14px;
+    }
+}
+

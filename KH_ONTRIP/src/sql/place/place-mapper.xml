@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+<!-- 상세지역창에서 놀거리,숙소,맛집 정보띄우기 -->
+	<entry key="selectPlayInfo">
+	SELECT PLC_NAME, PLC_ADDRESS, PLC_PNUMBER
+	FROM "Place"
+	WHERE STATUS = 'Y' AND DAREA_CODE = ? AND CATEGORY_CODE = 'PP'
+	ORDER BY PLC_CODE
+	</entry>
+	
+	<entry key="selectHotelInfo">
+	SELECT PLC_NAME, PLC_ADDRESS, PLC_PNUMBER
+	FROM "Place"
+	WHERE STATUS = 'Y' AND DAREA_CODE = ? AND CATEGORY_CODE = 'HH'
+	ORDER BY PLC_CODE
+	</entry>
+	
+	<entry key="selectFoodInfo">
+	SELECT PLC_NAME, PLC_ADDRESS, PLC_PNUMBER
+	FROM "Place"
+	WHERE STATUS = 'Y' AND DAREA_CODE = ? AND CATEGORY_CODE = 'FF'
+	ORDER BY PLC_CODE
+	</entry>
+	
+	
+	
+	<entry key="findDareaCode">
+	SELECT DAREA_CODE 
+	FROM "Detailed Area"
+	WHERE DAREA_NAME = ?
+	</entry>
+	
+	<!-- 시설코드가져오기 -->
+	<entry key="findPlaceCode">
+	SELECT PLC_CODE
+	FROM "Place"
+	WHERE PLC_NAME = ?
+	</entry>
+	
+	
+	<!-- 시설상세창에 정보띄우기  -->
+	<entry key="Hotel">
+	SELECT PLC_CODE, CATEGORY_CODE, DAREA_CODE,PLC_ADDRESS, PLC_TEXT, PLC_BNAME, PLC_PNUMBER,
+	PLC_LA, PLC_LO 
+	FROM "Place"
+	WHERE STATUS = 'Y' AND PLC_NAME = ?
+	</entry>
+	
+	
+	<!-- 시설상세창 이미지 띄우기 -->
+	<entry key="selectPlaceImages">
+		SELECT FILE_PATH, CHANGE_NAME, FILE_NO
+		FROM "Image"
+		WHERE STATUS = 'Y' AND PLC_CODE IN (SELECT PLC_CODE 
+							FROM "Place"
+							WHERE PLC_NAME = ?)
+	</entry>
+	
+	
+<!-- 메인창에서 검색 -->
+	<entry key="searchPlacePath">
+   SELECT FILE_NO, FILE_PATH, CHANGE_NAME
+   FROM "Image"
+   WHERE STATUS = 'Y' AND ORIGIN_NAME LIKE '%1%' AND ORIGIN_NAME LIKE ?
+   ORDER BY CHANGE_NAME 
+   </entry>
+   
+   <entry key="searchPlaceInfo">
+   SELECT CATEGORY_CODE, PLC_NAME, PLC_ADDRESS, PLC_PNUMBER, d.DAREA_NAME
+   FROM "Place"
+   JOIN "Detailed Area" d USING(DAREA_CODE)
+   WHERE STATUS = 'Y' AND PLC_NAME LIKE ?
+   ORDER BY PLC_NAME
+   </entry>
+	
+
+<!-- 해시태그를 사용한 검색 -->
+   <entry key="searchHashPlacePath">
+   SELECT FILE_NO, FILE_PATH, CHANGE_NAME
+   FROM "Image"
+   WHERE STATUS = 'Y' AND ORIGIN_NAME LIKE '%1%' AND PLC_CODE IN(SELECT s.PLC_CODE
+                                                                FROM "HashStorage" s
+                                                                JOIN "Hash" h USING(HAS_NO)
+                                                                WHERE h.HAS_NAME IN(@))
+   ORDER BY PLC_CODE
+   </entry>
+   
+   <entry key="searchHashPlaceInfo">
+   SELECT CATEGORY_CODE, PLC_NAME, PLC_ADDRESS, PLC_PNUMBER, d.DAREA_NAME
+   FROM "Place" 
+   JOIN "Detailed Area" d USING(DAREA_CODE)
+   WHERE STATUS = 'Y' AND PLC_CODE IN(SELECT s.PLC_CODE
+                                        FROM "HashStorage" s
+                                        JOIN "Hash" h USING(HAS_NO)
+                                        WHERE h.HAS_NAME IN(@))
+   ORDER BY PLC_CODE
+   </entry>
+
+
+<!-- 관리자페이지에서 메인관리 시설등록 시, 상세지역이름으로 상세지역코드가져오기 -->
+	<entry key="selectDAreaCode">
+	SELECT DAREA_CODE
+	FROM "Detailed Area"
+	WHERE DAREA_NAME = ?
+	</entry>
+	
+	
+<!-- 관리자페이지에서 시설등록하기 -->	
+	<entry key="insertPlace">
+	INSERT INTO "Place" 
+	(PLC_CODE, 
+	 CATEGORY_CODE, 
+	 DAREA_CODE, 
+	 PLC_NAME, 
+	 PLC_ADDRESS, 
+	 PLC_TEXT, 
+	 PLC_BNAME,
+	 PLC_PNUMBER, 
+	 PLC_LA, 
+	 PLC_LO,  
+	 LOCAL_CODE)
+	 
+	VALUES(SEQ_PLC.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+	</entry>	
+	
+
+<!-- 관리자페이지에서 시설등록 사진등록하기 -->
+	<entry key="insertPlaceImages">
+	INSERT INTO "Image"
+   (FILE_NO, 
+   PLC_CODE, 
+   ORIGIN_NAME, 
+   FILE_PATH, 
+   DAREA_CODE, 
+   STATUS, 
+   LOCAL_CODE, 
+   CATEGORY_CODE,
+   CHANGE_NAME)
+   VALUES(SEQ_FILE.NEXTVAL, ?, ?, ?, ?, 'Y', ?, ?, ?)
+	</entry>
+	
+	
+   <!-- 로그인시 찜 유지하기 위한 찜 조회  -->
+   <entry key="selectHeart">
+      SELECT *
+      FROM "Heart"
+      WHERE MEM_NO = ? AND PLC_CODE = ?
+   </entry>
+
+	
+	<!-- 관리자페이지 - 시설등록시, 등록한 시설의 시설코드 가져오기 -->
+	<entry key="selectPlaceCode">
+	SELECT PLC_CODE
+	FROM "Place"
+	WHERE PLC_NAME = ?
+	</entry>
+	
+</properties>
